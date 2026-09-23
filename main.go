@@ -204,9 +204,19 @@ func main() {
 		w.WriteHeader(http.StatusNoContent)
 	})
 
-	addr := getenv("PORT", getenv("HTTP_ADDR", ":8080"))
+	addr := listenAddr()
 	log.Printf("calendar server listening on %s for group %s", addr, group)
 	log.Fatal(http.ListenAndServe(addr, nil))
+}
+
+func listenAddr() string {
+	if port := getenv("PORT", ""); port != "" {
+		if strings.HasPrefix(port, ":") {
+			return port
+		}
+		return ":" + port
+	}
+	return getenv("HTTP_ADDR", ":8080")
 }
 
 func getenv(key, fallback string) string {
