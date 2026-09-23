@@ -16,3 +16,13 @@ go run .
 
 Календарь доступен по `http://localhost:8080/calendar.ics`.
 
+## Хост на Render
+
+Создайте **Web Service** из GitHub-репозитория и укажите:
+
+- **Build Command:** `go build -o app .`
+- **Start Command:** `./app`
+Переменная `SCHEDULE_GROUP` - необходимая группа в значении
+Переменную `PORT` задавать не нужно - Render передаст ее автоматически. После деплоя календарь будет доступен по адресу:
+
+`https://имясервиса.onrender.com/calendar.ics`.
