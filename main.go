@@ -57,6 +57,7 @@ var weekdayPairSlots = map[int][]pairTime{
 	5: {{"16:10", "17:40"}},
 }
 
+// * Для совместимости с кодом, которому нужен один интервал на пару.
 var weekdayPairTimes = map[int]pairTime{
 	1: {"09:00", "10:30"},
 	2: {"10:45", "12:40"},
@@ -158,6 +159,7 @@ func pairTimes(date time.Time, pair int) (pairTime, bool) {
 
 func pairSlots(date time.Time, pair int) ([]pairTime, bool) {
 	if date.Weekday() == time.Saturday {
+		// В субботу используется отдельное расписание.
 		slot, ok := saturdayPairTimes[pair]
 		if !ok {
 			return nil, false
@@ -211,6 +213,7 @@ func main() {
 
 func listenAddr() string {
 	if port := getenv("PORT", ""); port != "" {
+		// * Render передает PORT числом, а Go ожидает формат ":порт".
 		if strings.HasPrefix(port, ":") {
 			return port
 		}
@@ -225,3 +228,11 @@ func getenv(key, fallback string) string {
 	}
 	return fallback
 }
+
+/*
+!!! Максимально конченый проект, который я когда-либо делал.
+!!! Ненавижу XML, надеюсь, что больше никогда не придется с ним работать.
+!!! Вся логика расписания в этом файле, потому что я не хочу делать отдельный пакет для одного файла.
+!!! Пришлось прибегать к использованию ИИ чтобы разобраться с XML, потому что я все еще не понимаю зачем этот геморой.
+!!! Жизнь такова, какова она, и больше никакова.
+*/
