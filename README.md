@@ -12,7 +12,7 @@ go run .
 
 - `SCHEDULE_GROUP` — группа (по умолчанию `25290901/3091`);
 - `SCHEDULE_URL` — URL XML;
-- `HTTP_ADDR` — адрес HTTP-сервера (по умолчанию `:8080`).
+- `HTTP_ADDR` — порт сервера (по умолчанию `:8080`).
 
 Календарь доступен по `http://localhost:8080/calendar.ics`.
 
