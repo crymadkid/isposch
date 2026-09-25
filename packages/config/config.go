@@ -1,38 +1,46 @@
 package config
 
 import (
+	"net"
 	"os"
+	"strconv"
 	"strings"
 )
 
 const (
-	defaultScheduleURL = "https://polytech-shedule.ru/data/2.xml"
-	defaultGroup       = "25290901/3091"
+	defaultGroup = "25290901/3091"
 )
 
 type Config struct {
-	ScheduleURL string
-	Group       string
-	HTTPAddr    string
+	Group    string
+	HTTPAddr string
 }
 
 func Load() Config {
 	return Config{
-		ScheduleURL: getenv("SCHEDULE_URL", defaultScheduleURL),
-		Group:       getenv("SCHEDULE_GROUP", defaultGroup),
-		HTTPAddr:    listenAddr(),
+		Group:    getenv("SCHEDULE_GROUP", defaultGroup),
+		HTTPAddr: listenAddr(),
 	}
 }
 
 func listenAddr() string {
 	if port := getenv("PORT", ""); port != "" {
 		// Render передает PORT числом, а Go ожидает формат ":порт".
-		if strings.HasPrefix(port, ":") {
-			return port
+		port = strings.TrimPrefix(port, ":")
+		if number, err := strconv.Atoi(port); err == nil && number >= 1 && number <= 65535 {
+			return ":" + strconv.Itoa(number)
 		}
-		return ":" + port
 	}
-	return getenv("HTTP_ADDR", ":8080")
+	addr := getenv("HTTP_ADDR", ":8080")
+	if _, _, err := net.SplitHostPort(addr); err == nil {
+		return addr
+	}
+	if strings.HasPrefix(addr, ":") {
+		if number, err := strconv.Atoi(strings.TrimPrefix(addr, ":")); err == nil && number >= 1 && number <= 65535 {
+			return addr
+		}
+	}
+	return ":8080"
 }
 
 func getenv(key, fallback string) string {

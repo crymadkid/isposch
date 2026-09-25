@@ -23,12 +23,15 @@ func Generate(lessons []schedule.Lesson) string {
 			end := schedule.AtTime(lesson.Date, slot.End)
 
 			uidInput := fmt.Sprintf(
-				"%s|%d|%d|%s|%s",
+				"%s|%d|%d|%s|%s|%s|%s|%s",
 				lesson.Date.Format("2006-01-02"),
 				lesson.Pair,
 				slotIndex,
 				lesson.Subject,
 				lesson.Audience,
+				lesson.Teacher,
+				lesson.Campus,
+				lesson.Note,
 			)
 			sum := sha256.Sum256([]byte(uidInput))
 
@@ -66,9 +69,10 @@ func joinParts(parts ...string) string {
 }
 
 func icsEscape(value string) string {
-	// * В iCalendar некоторые символы имеют специальное значение, поэтому их нужно экранировать спасибо гуглу за подсказку
 	value = strings.ReplaceAll(value, `\`, `\\`)
 	value = strings.ReplaceAll(value, ";", `\;`)
 	value = strings.ReplaceAll(value, ",", `\,`)
-	return strings.ReplaceAll(strings.ReplaceAll(value, "\r\n", `\n`), "\n", `\n`)
+	value = strings.ReplaceAll(value, "\r\n", "\n")
+	value = strings.ReplaceAll(value, "\r", "\n")
+	return strings.ReplaceAll(value, "\n", `\n`)
 }

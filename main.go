@@ -13,7 +13,7 @@ func main() {
 	cfg := config.Load()
 	client := &http.Client{Timeout: 30 * time.Second}
 
-	handler := server.NewHandler(client, cfg.ScheduleURL, cfg.Group)
+	handler := server.NewHandler(client, cfg.Group)
 
 	log.Printf("calendar server listening on %s for group %s", cfg.HTTPAddr, cfg.Group)
 	if err := http.ListenAndServe(cfg.HTTPAddr, handler); err != nil {
