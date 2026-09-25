@@ -23,9 +23,5 @@ func NewHandler(client *http.Client, scheduleURL, group string) http.Handler {
 		_, _ = io.WriteString(w, calendar.Generate(lessons))
 	})
 
-	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusNoContent)
-	})
-
 	return mux
 }
