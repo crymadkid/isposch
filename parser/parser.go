@@ -2,7 +2,23 @@ package parser
 
 import (
 	"encoding/xml"
+	"io"
+	"net/http"
 )
+
+// Фетчинг расписания с сайта
+func FetchSchedule(url string) ([]Lesson, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSchedule(body)
+}
 
 // Определяю структуры для парсинга XML
 type dataroot struct {
