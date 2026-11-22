@@ -1,42 +1,36 @@
 package main
 
 import (
-	"fmt"
-	"isposch/parser"
+	"flag"
+	"isposch/server"
+	"log"
+	"net/http"
+	"time"
+	_ "time/tzdata"
 )
 
 func main() {
-	var testXML = []byte(`
-		<dataroot>
-			<My>
-				<ID>1278</ID>
-				<DAT>2026-09-10T00:00:00</DAT>
-				<UR>3</UR>
-				<IDGG>2</IDGG>
-				<FAMIO>Большакова А.В.</FAMIO>
-				<SPPRED.NAIM>Ин. яз.</SPPRED.NAIM>
-				<SPGRUP.NAIM>26294315/2092</SPGRUP.NAIM>
-				<ZAM>2</ZAM>
-				<KONS>0</KONS>
-				<AUD/>
-				<NOTE/>
-				<CAMPUS>П</CAMPUS>
-			</My>
-		</dataroot>
-	`)
+	addr := flag.String("addr", ":8080", "адрес сервера")
+	source := flag.String("source", "", "URL расписания")
+	tz := flag.String("tz", "Europe/Moscow", "часовой пояс")
+	flag.Parse()
 
-	lessons, err := parser.ParseSchedule(testXML)
+	if *source == "" {
+		log.Fatal("не указан URL расписания")
+	}
+	loc, err := time.LoadLocation(*tz)
 	if err != nil {
-		fmt.Println("Ошибка парсинга:", err)
-		return
+		log.Fatalf("не удалось загрузить часовой пояс %q: %v", *tz, err)
 	}
 
-	fmt.Printf("Распарсено записей: %d\n", len(lessons))
+	s := &server.Server{Source: *source, Loc: loc}
 
-	if len(lessons) > 0 {
-		fmt.Printf("Первый предмет: %s, Преподаватель: %s\n",
-			lessons[0].Subject,
-			lessons[0].Teacher,
-		)
+	srv := &http.Server{
+		Addr:         *addr,
+		Handler:      s.Handler(),
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 30 * time.Second,
 	}
+	log.Printf("Слушаю %s", *addr)
+	log.Fatal(srv.ListenAndServe())
 }
