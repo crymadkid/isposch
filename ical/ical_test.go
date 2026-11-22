@@ -67,6 +67,7 @@ func TestBuild_OneLesson(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ошибка: %v", err)
 	}
+	got = strings.ReplaceAll(got, "\r\n ", "") // <-- сюда
 
 	wantLines := []string{
 		"BEGIN:VEVENT",
@@ -96,6 +97,8 @@ func TestBuild_Note(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ошибка: %v", err)
 	}
+	got = strings.ReplaceAll(got, "\r\n ", "") // <-- сюда
+
 	if !strings.Contains(got, `\nПримечание: Зачёт`) {
 		t.Errorf("примечание не попало в описание:\n%s", got)
 	}
