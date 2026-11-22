@@ -38,6 +38,27 @@ isposch.exe -source "<URL с XML-расписанием>"
 | `-addr` | `:8080` | адрес, на котором слушает сервер |
 | `-tz` | `Europe/Moscow` | часовой пояс занятий |
 
+## Docker
+
+```
+docker build -t isposch .
+docker run --rm -p 8080:8080 isposch -addr :8080 -source "<URL с XML-расписанием>"
+```
+
+Или через compose. В корне проекта файл `.env`:
+
+```
+SCHEDULE_URL=адрес_с_xml_расписанием
+```
+
+и запусти:
+
+```
+docker compose up -d --build
+```
+
+Логи: `docker compose logs -f`.
+
 ## Использование
 
 ```
