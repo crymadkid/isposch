@@ -1,3 +1,3 @@
-module github.com/crymadkid/isposch
+module isposch
 
 go 1.27.1
