@@ -22,7 +22,7 @@ func (s *Server) Handler() http.Handler {
 
 func (s *Server) ServeSchedule(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet && r.Method != http.MethodHead {
-		w.Header().Set("ALLOW", "GET, HEAD")
+		w.Header().Set("Allow", "GET, HEAD")
 		http.Error(w, "Метод не разрешен", http.StatusMethodNotAllowed)
 		return
 	}
@@ -36,7 +36,7 @@ func (s *Server) ServeSchedule(w http.ResponseWriter, r *http.Request) {
 	lessons, err := parser.FetchSchedule(s.Source)
 	if err != nil {
 		log.Printf("Загрузка расписания: %v", err)
-		http.Error(w, "Ошибка загрузки расписания", http.StatusInternalServerError)
+		http.Error(w, "Ошибка загрузки расписания", http.StatusBadGateway)
 		return
 	}
 	lessons = parser.FilterByGroup(lessons, group)
