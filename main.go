@@ -7,7 +7,7 @@ import (
 
 func main() {
 	var testXML = []byte(`
-		<dataroot">
+		<dataroot>
 			<My>
 				<ID>1278</ID>
 				<DAT>2026-09-10T00:00:00</DAT>
