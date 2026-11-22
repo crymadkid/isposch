@@ -1,0 +1,7 @@
+services:
+  isposch:
+    build: .
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    command: ["-addr", ":8080", "-tz", "Europe/Moscow", "-source", "${SCHEDULE_URL}"]
